@@ -1,6 +1,6 @@
-class TimeFormatter
-  attr_reader :result
+# frozen_string_literal: true
 
+class TimeFormatter
   TIME_FORMATS = {
     'year' => '%Y',
     'month' => '%m',
@@ -11,38 +11,26 @@ class TimeFormatter
   }.freeze
 
   def initialize(formats)
-    @formats = formats.split(",")
-    @time = Time.now
-    @success = false
+    @formats = formats.split(',')
     @unknown_time_foramt = []
-    @result = ""
   end
 
   def call
-    @formats.each { |format| take_unknown_format(format) } 
-    @success = @unknown_time_format.empty?
-    return @result = ("Unknown time format #{@unknown_time_format}") unless @success
-    output_format = make_output_format(@formats)
-    @result = @time.strftime(output_format)
+    @formats.each do |format| 
+      @unknown_time_format << format unless TIME_FORMATS.key?(format)
+      @output_format << TIME_FORMATS[format] if TIME_FORMATS.include?(format)
+    end
   end
 
   def success?
-    @success
+    @unknown_time_format.empty?
   end
 
-  private
-
-  def take_unknown_format(format)
-    @unknown_time_format << format unless TIME_FORMATS.has_key?(format)
+  def time_string
+    Time.now.strftime(@output_format.join('-'))
   end
 
-  def make_output_format(formats)
-    @formats.each { |format|
-      if TIME_FORMATS.include?(format)
-        result << "-" unless result.empty?
-        result << TIME_FORMATS[format]
-      end
-    }
-    result
+  def invalid_string
+    "Unknown time format #{@unknown_time_format}" unless success?
   end
 end

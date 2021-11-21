@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Runtime
   def initialize(app)
     @app = app
@@ -6,8 +8,8 @@ class Runtime
   def call(env)
     start = Time.now
     status, headers, body = @app.call(env)
-    headers['X-Runtime'] = "%fs" % (Time.now - start)
-    
+    headers['X-Runtime'] = format('%fs', (Time.now - start))
+
     [status, headers, body]
   end
 end
