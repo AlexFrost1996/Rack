@@ -13,12 +13,16 @@ class TimeFormatter
   def initialize(formats)
     @formats = formats.split(',')
     @unknown_time_foramt = []
+    @output_format = []
   end
 
   def call
     @formats.each do |format| 
-      @unknown_time_format << format unless TIME_FORMATS.key?(format)
-      @output_format << TIME_FORMATS[format] if TIME_FORMATS.include?(format)
+      if TIME_FORMATS[format]
+        @output_format << TIME_FORMATS[format]
+      else
+        @unknown_time_format << format
+      end
     end
   end
 
