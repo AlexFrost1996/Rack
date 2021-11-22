@@ -35,7 +35,7 @@ class App
     Rack::Utils.parse_nested_query(@env['QUERY_STRING'])['format']
   end
 
-  def send_response(status, body)
+  def send_response(body, status)
     Rack::Response.new(body, status, headers).finish
   end
 end
